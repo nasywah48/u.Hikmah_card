@@ -99,6 +99,22 @@ nav a{margin-left:1.2rem}
 .post .ph,.th .ph{display:grid;place-items:center;width:100%;aspect-ratio:4/5;background:linear-gradient(135deg,#d9c3a5,#b99a7c);color:#fff;font-size:.6rem;letter-spacing:.2em;overflow:hidden}
 .th .ph{aspect-ratio:1}
 .post img,.th img{width:100%;height:100%;object-fit:cover}
+.fold-head{margin-top:6rem}
+.folders{display:flex;height:min(76vh,600px);margin-top:2rem;filter:drop-shadow(0 18px 24px rgba(60,40,30,.25))}
+.fd{position:relative;flex:1 1 0;min-width:0;overflow:hidden;cursor:pointer;text-align:left;background:var(--rose);border-radius:16px 16px 0 0;margin-left:-10px;transition:flex .8s cubic-bezier(.7,0,.2,1),filter .3s;box-shadow:-6px 0 14px -6px rgba(60,40,30,.3)}
+.fd:first-child{margin-left:0}
+.fd:nth-child(even){background:color-mix(in srgb,var(--rose) 80%,#fff)}
+.fd:hover{filter:brightness(1.05)}
+.fd.on{flex:7}
+.fd-ph{position:absolute;inset:7% 0 0 42%;transition:inset .8s cubic-bezier(.7,0,.2,1);background:linear-gradient(160deg,#d9c3a5,#a98a6d);display:grid;place-items:center;color:#fff;font-size:2.4rem;overflow:hidden}
+.fd-ph img{width:100%;height:100%;object-fit:cover}
+.fd.on .fd-ph{inset:0}
+.fd-name{position:absolute;left:10px;bottom:14px;writing-mode:vertical-rl;transform:rotate(180deg);font-size:clamp(1.3rem,2.2vw,2rem);color:var(--wine);white-space:nowrap;transition:opacity .4s}
+.fd.on .fd-name{opacity:0}
+.fd-tab{position:absolute;z-index:2;top:14px;left:10px;background:#fffdf7;color:#3a302b;padding:.55rem .3rem;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;writing-mode:vertical-rl;transform:rotate(180deg);box-shadow:var(--shadow)}
+.fd-cap{position:absolute;z-index:2;left:0;right:0;bottom:0;padding:3rem 1.5rem 1.3rem;background:linear-gradient(transparent,rgba(20,12,12,.75));color:#fff;opacity:0;transition:opacity .5s .3s;font-size:clamp(2.2rem,5vw,3.6rem);line-height:1}
+.fd.on .fd-cap{opacity:1}
+.env:nth-child(10){grid-column:2}
 #lb{position:fixed;inset:0;z-index:95;background:rgba(10,8,8,.92);display:none;place-items:center;color:#fff}
 #lb.show{display:grid}#lb .polaroid{width:min(86vw,520px)}
 #lb button{position:absolute;color:#fff;font-size:2rem;padding:1rem;cursor:pointer}
@@ -117,6 +133,12 @@ nav a{margin-left:1.2rem}
  .env:nth-child(n){margin-top:0}.env:last-child{grid-column:1/-1;justify-self:center}
  .feed{grid-template-columns:1fr;padding:3.5rem 1rem 1.5rem}
  .posts{grid-template-columns:1fr 1fr}
+ .env:nth-child(10){grid-column:auto}
+ .folders{flex-direction:column;height:auto}
+ .fd{flex:none;height:62px;margin-left:0;margin-top:-8px;transition:height .7s cubic-bezier(.7,0,.2,1)}.fd:first-child{margin-top:0}.fd.on{flex:none;height:420px}
+ .fd-ph{inset:0 0 0 45%}.fd.on .fd-ph{inset:0}
+ .fd-name{writing-mode:horizontal-tb;transform:none;left:64px;top:12px;bottom:auto}
+ .fd-tab{writing-mode:horizontal-tb;transform:none;padding:.3rem .5rem}
  .stmt,.stmt:nth-of-type(n){margin-left:0}nav a.hide-m{display:none}
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01ms!important}.rv{opacity:1;translate:0 0}html{scroll-behavior:auto}}
@@ -174,6 +196,12 @@ nav a{margin-left:1.2rem}
     </div>
     <div id="collage" class="posts"></div>
   </div>
+  <div class="fold-head rv">
+    <p class="meta">Chapter 03b — Kita</p>
+    <h3 class="serif" style="font-size:clamp(2rem,5vw,3.6rem);font-weight:400">Satu kamar, <em>sepuluh cerita.</em></h3>
+    <p class="meta" style="margin-top:.6rem">Klik folder untuk membukanya</p>
+  </div>
+  <div id="folders" class="folders rv"></div>
 </div></section>
 
 <section id="message" style="background:var(--paper)"><div class="wrap">
@@ -220,8 +248,19 @@ window.CONTENT = {
     { src: "assets/foto5.png", caption: "caption 5" }, { src: "assets/foto6.png", caption: "caption 6" }
   ],
   message: "Happy Teacher's Day, Ustadzah Hikmah! Makasih udah sabar dan selalu ada buat kami semua. Maaf kalau kami sering bikin repot. Semoga Ustadzah sehat, bahagia, dan dimudahkan semua urusannya. Kami sayang Ustadzah! 🤍.",
-  date: "25 November 2026"
-};
+    date: "25 November 2026",
+  folderPhotos: {
+    Almayra: "assets/almayra.png",
+    Anjali: "assets/anjali.png",
+    Syifa: "assets/syifa.png",
+    Cinta: "assets/cinta.png",
+    Dian: "assets/dian.png",
+    Dinna: "assets/dinna.png",
+    Faiha: "assets/faiha.png",
+    Karin: "assets/karin.png",
+    Nasywah: "assets/nasywah.jpg",
+    Queen: "assets/queen.png"
+  }};
 
 /* ====== TEMA ====== */
 (() => {
@@ -246,6 +285,16 @@ window.CONTENT = {
   lb.querySelector('.x').onclick = hide; lb.querySelector('.p').onclick = () => show(cur - 1); lb.querySelector('.n').onclick = () => show(cur + 1);
   lb.addEventListener('click', e => { if (e.target === lb) hide(); });
   addEventListener('keydown', e => { if (!lb.classList.contains('show')) return; if (e.key === 'Escape') hide(); if (e.key === 'ArrowRight') show(cur + 1); if (e.key === 'ArrowLeft') show(cur - 1); });
+})();
+
+/* ====== FOLDER KITA ====== */
+(() => {
+  const C = window.CONTENT, box = document.getElementById('folders'), P = C.folderPhotos || {};
+  box.innerHTML = C.members.map((m, i) => `<button class="fd${i === 0 ? ' on' : ''}" aria-expanded="${i === 0}" aria-label="Buka foto ${m.name}"><span class="fd-tab">No. ${String(i + 1).padStart(2, '0')}</span><span class="fd-name script">${m.name}</span><span class="fd-ph">${P[m.name] ? `<img loading="lazy" src="${P[m.name]}" alt="Foto ${m.name}">` : m.name.charAt(0)}</span><span class="fd-cap script">${m.name}</span></button>`).join('');
+  box.addEventListener('click', e => {
+    const b = e.target.closest('.fd'); if (!b) return;
+    box.querySelectorAll('.fd').forEach(f => { const on = f === b; f.classList.toggle('on', on); f.setAttribute('aria-expanded', on); });
+  });
 })();
 
 /* ====== INTRO, AMPLOP, MODAL, ANIMASI ====== */
